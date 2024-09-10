@@ -1,7 +1,7 @@
 # 编译器(如果未赋值则赋值)
 CROSS_COMPILE 	?= arm-linux-gnueabihf-
 # 编译目标
-TARGET		  	?= gpio_complete
+TARGET		  	?= gpio_interrupt
 
 # 编译（后定义的值不生效）
 CC 				:= $(CROSS_COMPILE)gcc
@@ -18,6 +18,7 @@ INCDIRS 		:= ../include \
 				   ../../../my_lib/gpio \
 				   ../../../my_lib/tools \
 				   ../../../my_lib/board \
+				   ../../../my_lib/interrupt \
 				   ../../../my_lib/key
 
 # 全部源文件路径			   			   
@@ -25,6 +26,7 @@ SRCDIRS			:= ../src \
 				   ../../../my_lib/clk \
 				   ../../../my_lib/gpio \
 				   ../../../my_lib/tools \
+				   ../../../my_lib/interrupt \
 				   ../../../my_lib/key
 				   
 # 编译包含命令，把所有包含路径前加上-I			   

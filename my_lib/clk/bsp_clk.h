@@ -15,5 +15,6 @@ Copyright © zuozhongkai Co., Ltd. 1998-2019. All rights reserved.
 
 /* 函数声明 */
 void clk_enable(void);
+void imx6u_clkinit(void);
 
 #endif
