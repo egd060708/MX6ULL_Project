@@ -434,7 +434,7 @@ Disassembly of section .text.startup:
 87800408:	f44f 4040 	mov.w	r0, #49152	; 0xc000
 8780040c:	2112      	movs	r1, #18
 8780040e:	f2c0 2009 	movt	r0, #521	; 0x209
-87800412:	2201      	movs	r2, #1
+87800412:	2200      	movs	r2, #0
 87800414:	f7ff ff36 	bl	87800284 <key_get_value>
 87800418:	3401      	adds	r4, #1
 8780041a:	4601      	mov	r1, r0

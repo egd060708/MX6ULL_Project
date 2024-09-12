@@ -61,7 +61,7 @@ int main(void)
 	unsigned char beep_state = OFF;
 	while (1)
 	{
-		keyvalue = key_get_value(GPIO1, 18, 1);
+		keyvalue = key_get_value(GPIO1, 18, 0);
 		if (keyvalue)
 		{
 			switch (keyvalue)

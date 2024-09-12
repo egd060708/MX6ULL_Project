@@ -14,7 +14,12 @@ Copyright © zuozhongkai Co., Ltd. 1998-2019. All rights reserved.
 
 
 /* 函数声明 */
+
+void delay_init(void);
 void delay(volatile unsigned int n);
+void delay_short(volatile unsigned int n);
+void delayus(uint32_t usdelay);
+void delayms(uint32_t msdelay);
 
 #endif
 

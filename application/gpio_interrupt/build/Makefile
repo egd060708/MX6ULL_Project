@@ -19,7 +19,8 @@ INCDIRS 		:= ../include \
 				   ../../../my_lib/tools \
 				   ../../../my_lib/board \
 				   ../../../my_lib/interrupt \
-				   ../../../my_lib/key
+				   ../../../my_lib/key \
+				   ../../../my_lib/timer
 
 # 全部源文件路径			   			   
 SRCDIRS			:= ../src \
@@ -27,7 +28,8 @@ SRCDIRS			:= ../src \
 				   ../../../my_lib/gpio \
 				   ../../../my_lib/tools \
 				   ../../../my_lib/interrupt \
-				   ../../../my_lib/key
+				   ../../../my_lib/key \
+				   ../../../my_lib/timer
 				   
 # 编译包含命令，把所有包含路径前加上-I			   
 INCLUDE			:= $(patsubst %, -I %, $(INCDIRS))

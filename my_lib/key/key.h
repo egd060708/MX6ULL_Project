@@ -5,6 +5,7 @@
 
 uint32_t key_get_value(GPIO_Type* _gpio_group, uint32_t _pin, uint32_t _dir);
 
-void key_irphandler(void);
+void keyDelay_irqhandler(void);
+void keyTimer_irqhandler(void);
 
 #endif

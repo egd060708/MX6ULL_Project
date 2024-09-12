@@ -19,7 +19,7 @@ void gpio_init(uint32_t _muxRegister,
 {
 	/* 1、初始化IO复用，并且关闭软件输入 */
 	IOMUXC_SetPinMux(_muxRegister, _muxMode, _inputRegister, _inputDaisy, _configRegister, _init_config->inputOnfield);
-	/* 2、、配置GPIO1_IO03的IO属性
+	/* 2、配置GPIO1_IO03的IO属性
 	 *bit 16: HYS开关
 	 *bit [15:14]: 上下拉
 	 *bit [13]: kepper功能
@@ -30,7 +30,9 @@ void gpio_init(uint32_t _muxRegister,
 	 *bit [0]: 转换率
 	 */
 	IOMUXC_SetPinConfig(_muxRegister, _muxMode, _inputRegister, _inputDaisy, _configRegister, _init_config->configValue);
-	/* 3、配置输入输出 */
+	/* 3、先关闭中断 */
+	gpio_disable_int(_init_config->gpio_group,_init_config->pin_num);
+	/* 4、配置输入输出 */
 	if (_init_config->direction == kGPIO_DigitalInput)
 	{
 		_init_config->gpio_group->GDIR &= ~(1 << _init_config->pin_num); // 设置为输入模式
@@ -40,6 +42,8 @@ void gpio_init(uint32_t _muxRegister,
 		_init_config->gpio_group->GDIR |= (1 << _init_config->pin_num);							   // 设置为输出模式
 		gpio_pin_write(_init_config->gpio_group, _init_config->pin_num, _init_config->outputLogic); // 配置输出端口的默认电平
 	}
+	/* 5、配置GPIO中断功能 */
+	gpio_int_config(_init_config->gpio_group,_init_config->pin_num,_init_config->interruptMode);
 }
 
 /**
@@ -81,7 +85,7 @@ void gpio_int_config(GPIO_Type* _gpio_group, uint32_t _pin, gpio_interrupt_mode_
 	volatile uint32_t *icr; // volatile关键字防优化
 	uint32_t icrShift;
 	icrShift = _pin;
-	_gpio_group->EDGE_SEL &= ~(1U << _pin); // ��除中断边��选择
+	_gpio_group->EDGE_SEL &= ~(1U << _pin); // 取消中断边沿选择
 	if(_pin < 16)
 	{
 		icr = &(_gpio_group->ICR1);

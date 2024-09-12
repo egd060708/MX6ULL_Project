@@ -1,6 +1,7 @@
 #include "key.h"
 #include "bsp_gpio.h"
 #include "bsp_delay.h"
+#include "bsp_epittimer.h"
 
 
 /**
@@ -31,7 +32,10 @@ uint32_t key_get_value(GPIO_Type *_gpio_group, uint32_t _pin, uint32_t _dir)
 	return ret;
 }
 
-void key_irphandler(void)
+/**
+ * @brief 按键使用延迟函数的回调
+ */
+void keyDelay_irqhandler(void)
 {
     static uint32_t state = 0;
     delay(10);
@@ -41,4 +45,13 @@ void key_irphandler(void)
 		gpio_pin_write(GPIO5, 1, (uint32_t)!state);
 	}
 	gpio_clear_int_flags(GPIO1, 18);// 清除中断标志位
+}
+
+/**
+ * @brief 按键使用定时器消抖回调
+ */
+void keyTimer_irqhandler(void)
+{
+	epit1_restart(66000000/100); // 10ms计时
+	gpio_clear_int_flags(GPIO1, 18); // 清除中断标志位
 }

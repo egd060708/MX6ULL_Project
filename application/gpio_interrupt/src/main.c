@@ -18,6 +18,7 @@ Copyright © zuozhongkai Co., Ltd. 1998-2019. All rights reserved.
 #include "bsp_gpio.h"
 #include "bsp_int.h"
 #include "key.h"
+#include "bsp_epittimer.h"
 
 /*
  * @description	: mian函数
@@ -26,6 +27,7 @@ Copyright © zuozhongkai Co., Ltd. 1998-2019. All rights reserved.
  */
 int main(void)
 {
+	interrupt_init();// 一定最先调用中断管理器的初始化
 	imx6u_clkinit();//配置时钟，全部设置到推荐频率
 	clk_enable(); /* 使能所有的时钟 			*/
 	// 初始化led
@@ -35,7 +37,8 @@ int main(void)
 		.inputOnfield = 0,
 		.configValue = 0X10B0,
 		.direction = kGPIO_DigitalOutput,
-		.outputLogic = 1};
+		.outputLogic = 1,
+		.interruptMode = kGPIO_NoIntmode};
 	gpio_init(IOMUXC_GPIO1_IO03_GPIO1_IO03, &led_config);
 	// 初始化按键
 	gpio_init_config_s key_config = {
@@ -55,11 +58,16 @@ int main(void)
 		.inputOnfield = 0,
 		.configValue = 0X10B0,
 		.direction = kGPIO_DigitalOutput,
-		.outputLogic = 1};
+		.outputLogic = 1,
+		.interruptMode = kGPIO_NoIntmode};
 	gpio_init(IOMUXC_SNVS_SNVS_TAMPER1_GPIO5_IO01, &beep_config);
-    // 初始化按键外部中断
+	// 定时器及其中断配置
+	epit1_init(0,66000000/100,epit1_key_irqhandler);
+	delay_init();
+	// 初始化按键外部中断
     GIC_EnableIRQ(GPIO1_Combined_16_31_IRQn);
-    system_register_irqhandler(GPIO1_Combined_16_31_IRQn, (system_irq_handler_t)key_irphandler,NULL);
+    // system_register_irqhandler(GPIO1_Combined_16_31_IRQn, (system_irq_handler_t)keyDelay_irqhandler,NULL);// 使用延迟函数实现按键外部中断识别
+	system_register_irqhandler(GPIO1_Combined_16_31_IRQn, (system_irq_handler_t)keyTimer_irqhandler,NULL);// 使用定时器中断实现按键消抖
     gpio_enable_int(GPIO1, 18);
 
 	int i = 0;
@@ -88,7 +96,7 @@ int main(void)
 			// led灯开关
 			gpio_pin_write(GPIO1, 3, (uint32_t)!led_state);
 		}
-		delay(10);
+		delayms(10);
 	}
 
 	return 0;
